@@ -1,0 +1,27 @@
+.sidebar{
+    background: var(--blue);
+    height: 100vh;
+    color: var(--white);
+    flex: 1;
+    position: fixed;
+}
+
+.sidebar-links li{
+    padding: 15px 20px;
+}
+
+.sidebar-links li.active{
+    background: rgb(100, 51, 137);
+}
+
+.sidebar-links li a{
+  text-decoration: none;
+  font-size: 19px;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-links li a svg{
+    margin-left: 10px;
+}

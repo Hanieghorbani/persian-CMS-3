@@ -1,0 +1,19 @@
+.detailsModal{
+    width: 30%;
+}
+
+.detailsModal th{
+    font-size: 20px;
+    font-weight: bold;
+}
+.detailsModal th , .detailsModal td{
+   padding: 15px;
+}
+
+.detailsModal tr{
+    text-align: center;
+}
+
+.detailsModal span{
+    cursor: pointer;
+}

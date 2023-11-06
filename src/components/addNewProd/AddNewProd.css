@@ -1,0 +1,30 @@
+
+.addNewProd input{
+    outline: none;
+    border: none;
+    background: inherit;
+    color: var(--blue);
+}
+
+.addNewProd .row > div > div{
+    padding: 10px;
+    margin: 5px;
+    border-radius: 10px;
+    background-color: var(--white-50);
+    display: flex;
+    align-items: center;
+}
+
+.addNewProd svg{
+    margin-left: 10px;
+    font-size: 25px;
+}
+
+
+.addNewProd button{
+    background: var(--blue);
+    color: var(--white);
+    border-radius: 10px;
+    padding:10px;
+    float: left;
+}

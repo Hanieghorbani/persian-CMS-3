@@ -1,0 +1,37 @@
+.header img{
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+
+.searchBox{
+    background: var(--white);
+    border-radius: 10px;
+    padding-left: 5px;
+}
+
+.searchBox input{
+    outline: none;
+    border: none;
+    border-radius: 20px;
+    padding: 5px 10px;
+}
+
+.searchBox button{
+    background: var(--blue);
+    color: var(--white);
+    border-radius: 10px;
+    padding: 7px 10px;
+    border: none;
+    outline: none;
+    font-size: 13px;
+}
+
+.header-left  svg{
+    background: var(--blue);
+    color: var(--white);
+    border-radius: 8px;
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+}

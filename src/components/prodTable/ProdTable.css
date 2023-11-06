@@ -1,0 +1,50 @@
+.prodTable img{
+    width: 150px;
+    object-fit: cover;
+}
+
+.prodTable button{
+    background: var(--blue);
+    color: var(--white);
+    padding: 10px;
+    border-radius: 10px;
+    
+}
+
+.prodTable tr:nth-child(1){
+    width: 70%;
+    margin-bottom: 2rem;
+    /* padding-right: 60px; */
+}
+
+.prodTable th{
+    padding-right: 65px;
+    font-size: 1.2rem;
+}
+
+.prodTable tr{
+    display: flex;
+    justify-content: space-between;
+}
+
+.prodTable td{
+    display: flex;
+    align-items: center;
+}
+
+.edit-form-group >div{
+    background: var(--white-50);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex; 
+   align-items: center;
+   margin-bottom: 15px;
+}
+
+.edit-form-group input{
+    border-radius: 10px;
+    background: inherit;
+    outline: none;
+    border: none;
+    padding-right: 10px;
+}
