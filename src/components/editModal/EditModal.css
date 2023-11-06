@@ -1,3 +1,6 @@
+.editModal {
+  width: 40%;
+}
 .editModal button{
   background: var(--blue);
   color: var(--white);

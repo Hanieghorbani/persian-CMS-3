@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import "./DetailsModal.css"
-export default function DetailsModal({ onHide }) {
+export default function DetailsModal({ onHide,children }) {
   useEffect(() => {
     function checkKey(e) {
       if (e.keyCode === 13) {
@@ -16,22 +16,7 @@ export default function DetailsModal({ onHide }) {
         <span className="fw-bold fs-4" onClick={() => onHide()}>
           ⨉
         </span>
-        <table className="w-100">
-          <thead>
-            <tr>
-              <th>اسم</th>
-              <th>قیمت</th>
-              <th>محبوبیت</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>روغن سرخ کردنی</td>
-              <td>92000</td>
-              <td>78%</td>
-            </tr>
-          </tbody>
-        </table>
+        {children}
       </div>
     </div>
   )
