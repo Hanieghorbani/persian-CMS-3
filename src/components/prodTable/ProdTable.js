@@ -1,14 +1,20 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import "./ProdTable.css"
 import DeleteModal from "../deleteModal/DeleteModal"
 import DetailsModal from "../detailsModal/DetailsModal"
 import EditModal from "../editModal/EditModal"
 import { BsCurrencyDollar } from "react-icons/bs"
+import ErrorBox from "../errorBox/ErrorBox"
 
 export default function ProdTable() {
   const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
   const [isShowDetailsModal, setIsShowDetailsModal] = useState(false)
   const [isShowEditModal, setIsShowEditModal] = useState(false)
+const [allProducts,setAllProducts] = useState([])
+  useEffect(()=>{
+    fetch('http://localhost:8000/api/products').then(res=>res.json()).then(products=>setAllProducts(products))
+  },[])
+
   function cancelDeleteModal() {
     console.log("cancle delete modal")
     setIsShowDeleteModal(false)
@@ -32,21 +38,22 @@ export default function ProdTable() {
   }
   return (
     <>
-      <div className="prodTable bg-white mt-5 rounded-4 p-4">
+
+    {allProducts.length ? ( <div className="prodTable bg-white mt-5 rounded-4 p-4">
         <tr>
           <th>عکس</th>
           <th>اسم</th>
           <th>قیمت</th>
           <th>موجودی</th>
         </tr>
-
-        <tr>
+      {allProducts.map(product=>(
+         <tr>
           <td>
-            <img src="/images/oil.jpeg" alt="oil" />
+            <img src={product.img} alt="oil" />
           </td>
-          <td>روغن سرخ کردنی</td>
-          <td>92000</td>
-          <td>82</td>
+          <td>{product.title}</td>
+          <td>{product.price}</td>
+          <td>{product.count}</td>
           <td>
             <button onClick={() => setIsShowDetailsModal(true)}>جزئیات</button>
             <button className="mx-3" onClick={() => setIsShowDeleteModal(true)}>
@@ -55,7 +62,10 @@ export default function ProdTable() {
             <button onClick={() => setIsShowEditModal(true)}>ویرایش</button>
           </td>
         </tr>
-      </div>
+      ))}
+       
+      </div>) : (<ErrorBox msg={"هیچ محصولی یافت نشد"}/>)}
+     
       {isShowDeleteModal && (
         <DeleteModal
           cancelModal={cancelDeleteModal}
