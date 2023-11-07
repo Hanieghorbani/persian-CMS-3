@@ -28,7 +28,6 @@ export default function ProdTable({ getAllProducts, allProducts }) {
     setIsShowDeleteModal(false)
   }
   function submitDeleteModal() {
-    console.log(productId)
     fetch(`http://localhost:8000/api/products/${productId}`, {
       method: "DELETE",
     })
@@ -39,6 +38,12 @@ export default function ProdTable({ getAllProducts, allProducts }) {
           position: toast.POSITION.TOP_RIGHT,
         })
         getAllProducts()
+      })
+      .catch((err) => {
+        if (err == "SyntaxError: Unexpected end of JSON input") {
+         alert('این محصول به دلیل داشتن کامنت حذف نمی شود.ابتدا کامنت ان راپاک کنید.(باگ بک اند)')
+          setIsShowDeleteModal(false)
+        }
       })
   }
   function hideDetailsModal() {

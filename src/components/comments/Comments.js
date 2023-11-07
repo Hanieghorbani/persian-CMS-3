@@ -98,9 +98,9 @@ export default function Comments() {
   return (
     <div className="comments-div">
       <ToastContainer autoClose={2000} rtl />
-
+       <h1 className="my-4 fs-3">لیست کامنت ها</h1>
       {allComments.length ? (
-        <table className="bg-white p-4 w-100 rounded-4 mt-5">
+        <table className="bg-white p-4 w-100 rounded-4">
           <thead>
             <tr>
               <th>اسم کاربر</th>
