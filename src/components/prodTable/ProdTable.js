@@ -144,6 +144,7 @@ export default function ProdTable({ getAllProducts, allProducts }) {
         <DeleteModal
           cancelModal={cancelDeleteModal}
           submitModal={submitDeleteModal}
+          title={"آیا از حذف اطمینان دارید ؟"}
         />
       )}
       {isShowDetailsModal && (
