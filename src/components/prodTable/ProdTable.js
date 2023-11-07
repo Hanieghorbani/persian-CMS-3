@@ -75,62 +75,67 @@ export default function ProdTable({ getAllProducts, allProducts }) {
     <>
       <ToastContainer autoClose={2000} rtl />
       {allProducts.length ? (
-        <div className="prodTable bg-white mt-5 rounded-4 p-4">
-          <tr>
-            <th>عکس</th>
-            <th>اسم</th>
-            <th>قیمت</th>
-            <th>موجودی</th>
-          </tr>
-          {allProducts.reverse().map((product) => (
+        <table className="prodTable bg-white mt-5 rounded-4 p-4 w-100">
+          <thead>
             <tr>
-              <td>
-                <img src={product.img} alt="oil" />
-              </td>
-              <td>{product.title}</td>
-              <td>
-                {new Intl.NumberFormat("en-US", { style: "decimal" }).format(
-                  product.price
-                )}
-              </td>
-              <td>{product.count}</td>
-              <td>
-                <button
-                  onClick={() => {
-                    setIsShowDetailsModal(true)
-                    setMainInfoProd(product)
-                  }}
-                >
-                  جزئیات
-                </button>
-                <button
-                  className="mx-3"
-                  onClick={() => {
-                    setIsShowDeleteModal(true)
-                    setProductId(product.id)
-                  }}
-                >
-                  حذف
-                </button>
-                <button
-                  onClick={() => {
-                    setIsShowEditModal(true)
-                    setProductId(product.id)
-                    setProdNewColors(product.colors)
-                    setProdNewCount(product.count)
-                    setProdNewPopularity(product.popularity)
-                    setProdNewPrice(product.price)
-                    setProdNewSale(product.sale)
-                    setProdNewTitle(product.title)
-                    setProdNewImg(product.img)
-                  }}
-                >
-                  ویرایش
-                </button>
-              </td>
+              <th>عکس</th>
+              <th>اسم</th>
+              <th>قیمت</th>
+              <th>موجودی</th>
             </tr>
-          ))}
-        </div>
+          </thead>
+
+          <tbody>
+            {allProducts.reverse().map((product) => (
+              <tr key={product.id}>
+                <td>
+                  <img src={product.img} alt="oil" />
+                </td>
+                <td>{product.title}</td>
+                <td>
+                  {new Intl.NumberFormat("en-US", { style: "decimal" }).format(
+                    product.price
+                  )}
+                </td>
+                <td>{product.count}</td>
+                <td>
+                  <button
+                    onClick={() => {
+                      setIsShowDetailsModal(true)
+                      setMainInfoProd(product)
+                    }}
+                  >
+                    جزئیات
+                  </button>
+                  <button
+                    className="mx-3"
+                    onClick={() => {
+                      setIsShowDeleteModal(true)
+                      setProductId(product.id)
+                    }}
+                  >
+                    حذف
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsShowEditModal(true)
+                      setProductId(product.id)
+                      setProdNewColors(product.colors)
+                      setProdNewCount(product.count)
+                      setProdNewPopularity(product.popularity)
+                      setProdNewPrice(product.price)
+                      setProdNewSale(product.sale)
+                      setProdNewTitle(product.title)
+                      setProdNewImg(product.img)
+                    }}
+                  >
+                    ویرایش
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       ) : (
         <ErrorBox msg={"هیچ محصولی یافت نشد"} />
       )}

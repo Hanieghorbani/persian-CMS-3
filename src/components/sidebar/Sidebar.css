@@ -8,6 +8,7 @@
 
 .sidebar-links li{
     padding: 15px 20px;
+    transition: all 0.4s ease;
 }
 
 .sidebar-links li.active{

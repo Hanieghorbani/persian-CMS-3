@@ -4,7 +4,7 @@ import Users from './components/users/Users'
 import Orders from './components/orders/Orders'
 import Offers from './components/offers/Offers'
 let routes = [
-    {path:'/',element:<Products/>},
+    {path:'/home',element:<Products/>},
     {path:'/products',element:<Products/>},
     {path:'/comments',element:<Comments/>},
     {path:'/users',element:<Users/>},

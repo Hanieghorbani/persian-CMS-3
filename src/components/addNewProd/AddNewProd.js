@@ -16,37 +16,51 @@ export default function AddNewProd({ getAllProducts }) {
   const [newProdColors, setNewProdColors] = useState("")
 
   function submitNewProduct() {
-    const newProductInfos = {
-      title: newProdTitle,
-      price: newProdPrice,
-      count: newProdCount,
-      img: newProdImg,
-      popularity: newProdPopularity,
-      sale: newProdSale,
-      colors: newProdColors,
-    }
-    fetch("http://localhost:8000/api/products", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newProductInfos),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        getAllProducts()
-        setNewProdTitle("")
-        setNewProdSale("")
-        setNewProdPrice("")
-        setNewProdCount("")
-        setNewProdPopularity("")
-        setNewProdImg("")
-        setNewProdColors("")
-
-        toast.success("محصول با موفقیت اضافه شد", {
-          position: toast.POSITION.TOP_RIGHT,
-        })
+    if (
+      newProdTitle &&
+      newProdSale &&
+      newProdPrice &&
+      newProdCount &&
+      newProdPopularity &&
+      newProdImg &&
+      newProdColors
+    ) {
+      const newProductInfos = {
+        title: newProdTitle,
+        price: newProdPrice,
+        count: newProdCount,
+        img: newProdImg,
+        popularity: newProdPopularity,
+        sale: newProdSale,
+        colors: newProdColors,
+      }
+      fetch("http://localhost:8000/api/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newProductInfos),
       })
+        .then((res) => res.json())
+        .then((result) => {
+          getAllProducts()
+          setNewProdTitle("")
+          setNewProdSale("")
+          setNewProdPrice("")
+          setNewProdCount("")
+          setNewProdPopularity("")
+          setNewProdImg("")
+          setNewProdColors("")
+
+          toast.success("محصول با موفقیت اضافه شد", {
+            position: toast.POSITION.TOP_RIGHT,
+          })
+        })
+    }else{
+      toast.error("لطفا تمام موارد را وارد کنید", {
+        position: toast.POSITION.TOP_RIGHT,
+      })
+    }
   }
   return (
     <div className="addNewProd">
