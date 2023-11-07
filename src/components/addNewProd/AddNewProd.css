@@ -3,9 +3,7 @@
     outline: none;
     border: none;
     background: inherit;
-    color: var(--blue);
 }
-
 .addNewProd .row > div > div{
     padding: 10px;
     margin: 5px;

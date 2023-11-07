@@ -3,15 +3,16 @@ import "./ProdTable.css"
 import DeleteModal from "../deleteModal/DeleteModal"
 import DetailsModal from "../detailsModal/DetailsModal"
 import EditModal from "../editModal/EditModal"
-import { BsCurrencyDollar } from "react-icons/bs"
 import ErrorBox from "../errorBox/ErrorBox"
 import { toast, ToastContainer } from "react-toastify"
-
-export default function ProdTable() {
+import { MdDriveFileRenameOutline } from "react-icons/md"
+import { BsBag, BsCartCheck, BsCurrencyDollar } from "react-icons/bs"
+import { AiOutlineHeart, AiOutlineFileUnknown } from "react-icons/ai"
+import { HiOutlineColorSwatch } from "react-icons/hi"
+export default function ProdTable({ getAllProducts, allProducts }) {
   const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
   const [isShowDetailsModal, setIsShowDetailsModal] = useState(false)
   const [isShowEditModal, setIsShowEditModal] = useState(false)
-  const [allProducts, setAllProducts] = useState([])
   const [productId, setProductId] = useState(null)
   const [mainInfoProd, setMainInfoProd] = useState([])
 
@@ -22,24 +23,11 @@ export default function ProdTable() {
   const [prodNewPopularity, setProdNewPopularity] = useState("")
   const [prodNewImg, setProdNewImg] = useState("")
   const [prodNewColors, setProdNewColors] = useState("")
-  
-
-  useEffect(() => {
-    getAllProducts()
-  }, [])
-
-  function getAllProducts() {
-    fetch("http://localhost:8000/api/products")
-      .then((res) => res.json())
-      .then((products) => setAllProducts(products))
-  }
 
   function cancelDeleteModal() {
-    console.log("cancle delete modal")
     setIsShowDeleteModal(false)
   }
   function submitDeleteModal() {
-    console.log("submit delete modal")
     console.log(productId)
     fetch(`http://localhost:8000/api/products/${productId}`, {
       method: "DELETE",
@@ -54,17 +42,34 @@ export default function ProdTable() {
       })
   }
   function hideDetailsModal() {
-    console.log("cancle details modal")
     setIsShowDetailsModal(false)
   }
   function closeEditModal() {
-    console.log("edit modal was closed")
     setIsShowEditModal(false)
   }
 
   function submitEditModal() {
-    console.log("edit modal was submited")
-    setIsShowEditModal(false)
+    const newInfosProd = {
+      title: prodNewTitle,
+      price: prodNewPrice,
+      count: prodNewCount,
+      img: prodNewImg,
+      popularity: prodNewPopularity,
+      sale: prodNewSale,
+      colors: prodNewColors,
+    }
+    fetch(`http://localhost:8000/api/products/${productId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newInfosProd),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        setIsShowEditModal(false)
+        getAllProducts()
+      })
   }
   return (
     <>
@@ -77,7 +82,7 @@ export default function ProdTable() {
             <th>قیمت</th>
             <th>موجودی</th>
           </tr>
-          {allProducts.map((product) => (
+          {allProducts.reverse().map((product) => (
             <tr>
               <td>
                 <img src={product.img} alt="oil" />
@@ -110,7 +115,7 @@ export default function ProdTable() {
                 <button
                   onClick={() => {
                     setIsShowEditModal(true)
-
+                    setProductId(product.id)
                     setProdNewColors(product.colors)
                     setProdNewCount(product.count)
                     setProdNewPopularity(product.popularity)
@@ -165,11 +170,12 @@ export default function ProdTable() {
           <div className="row edit-form-group gap-3 justify-content-center">
             <div className="col-lg-5">
               <div>
-                <BsCurrencyDollar />
+                <MdDriveFileRenameOutline />
                 <input
                   type="text"
                   placeholder="عنوان جدید را وارد کنید"
                   value={prodNewTitle}
+                  onChange={(e) => setProdNewTitle(e.target.value)}
                 />
               </div>
             </div>
@@ -180,56 +186,62 @@ export default function ProdTable() {
                   type="text"
                   placeholder="مبلغ جدید را وارد کنید"
                   value={prodNewPrice}
+                  onChange={(e) => setProdNewPrice(e.target.value)}
                 />
               </div>
             </div>
             <div className="col-lg-5">
               <div>
-                <BsCurrencyDollar />
+                <BsBag />
                 <input
                   type="text"
                   placeholder="موجودی جدید را وارد کنید"
                   value={prodNewCount}
+                  onChange={(e) => setProdNewCount(e.target.value)}
                 />
               </div>
             </div>
             <div className="col-lg-5">
               <div>
-                <BsCurrencyDollar />
+                <AiOutlineFileUnknown />
                 <input
                   type="text"
                   placeholder="آدرس کاور جدید را وارد کنید"
                   value={prodNewImg}
+                  onChange={(e) => setProdNewImg(e.target.value)}
                 />
               </div>
             </div>
             <div className="col-lg-5">
               <div>
-                <BsCurrencyDollar />
+                <AiOutlineHeart />
                 <input
                   type="text"
                   placeholder=" میزان محبوبیت جدید را وارد کنید"
                   value={prodNewPopularity}
+                  onChange={(e) => setProdNewPopularity(e.target.value)}
                 />
               </div>
             </div>
             <div className="col-lg-5">
               <div>
-                <BsCurrencyDollar />
+                <BsCartCheck />
                 <input
                   type="text"
                   placeholder=" میزان فروش جدید را وارد کنید"
                   value={prodNewSale}
+                  onChange={(e) => setProdNewSale(e.target.value)}
                 />
               </div>
             </div>
             <div className="col-lg-5">
               <div>
-                <BsCurrencyDollar />
+                <HiOutlineColorSwatch />
                 <input
                   type="text"
                   placeholder=" تعداد رنگ بندی جدید را وارد کنید"
                   value={prodNewColors}
+                  onChange={(e) => setProdNewColors(e.target.value)}
                 />
               </div>
             </div>

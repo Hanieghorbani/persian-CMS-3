@@ -1,14 +1,22 @@
-import React from "react"
-import ErrorBox from "../errorBox/ErrorBox"
+import React,{useEffect,useState} from "react"
 import AddNewProd from "../addNewProd/AddNewProd"
 import ProdTable from "../prodTable/ProdTable"
-import DeleteModal from "../deleteModal/DeleteModal"
 export default function Products() {
+  const [allProducts, setAllProducts] = useState([])
+
+  useEffect(() => {
+    getAllProducts()
+  }, [])
+
+  function getAllProducts() {
+    fetch("http://localhost:8000/api/products")
+      .then((res) => res.json())
+      .then((products) => setAllProducts(products))
+  }
   return (
     <div>
-      {/* <ErrorBox msg={"هیچ محصولی یافت نشد"} /> */}
-      <AddNewProd />
-      <ProdTable />
+      <AddNewProd getAllProducts={getAllProducts}/>
+      <ProdTable getAllProducts={getAllProducts} allProducts={allProducts}/>
     </div>
   )
 }
