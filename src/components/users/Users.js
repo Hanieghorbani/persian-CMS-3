@@ -12,7 +12,7 @@ import { BsCartCheck } from "react-icons/bs"
 import { AiOutlineLock, AiOutlinePhone, AiOutlineUser } from "react-icons/ai"
 import { CiLocationOn } from "react-icons/ci"
 import { GrScorecard } from "react-icons/gr"
-
+import DetailsModal from "../detailsModal/DetailsModal"
 export default function Users() {
   const [users, setUsers] = useState([])
   const [isShowDeleteModal, setIsShowDeleteModal] = useState("")
@@ -31,7 +31,8 @@ export default function Users() {
   const [buy, setBuy] = useState("")
 
   const [isShowErrorText, setIsShowErrorText] = useState(false)
-
+  const [isShowDetailsModal, setIsShowDetailsModal] = useState(false)
+  const [mainUserInfos, setMainUserInfos] = useState([])
   useEffect(() => {
     getAllUsers()
   }, [])
@@ -74,7 +75,6 @@ export default function Users() {
       lastname.trim().length >= 3 &&
       username.length >= 3 &&
       password.length >= 8 &&
-      phone.length == 11 &&
       !isNaN(phone) &&
       city.trim().length &&
       emailVal.test(email) &&
@@ -104,7 +104,6 @@ export default function Users() {
       })
         .then((res) => res.json())
         .then((result) => {
-          console.log(result)
           getAllUsers()
           toast.success("ویرایش کاربر با موفقیت انجام", {
             position: toast.POSITION.TOP_RIGHT,
@@ -116,6 +115,7 @@ export default function Users() {
       setIsShowErrorText(true)
     }
   }
+
   return (
     <div className="users-div">
       <ToastContainer autoClose={2000} rtl />
@@ -170,7 +170,15 @@ export default function Users() {
                   >
                     ویرایش
                   </button>
-                  <button>جزییات</button>
+                  <button
+                    onClick={() => {
+                      setIsShowDetailsModal(true)
+                      setUserId(user.id)
+                      setMainUserInfos(user)
+                    }}
+                  >
+                    جزییات
+                  </button>
                 </td>
               </tr>
             ))}
@@ -306,8 +314,8 @@ export default function Users() {
               <div className="bg-white">
                 <ul className="text-danger">
                   <li>*رمزعبور باید بیشتر 7 رقم باشد</li>
-                  <li>*
-                    الگوی ایمیل باید مطابق مثال رو به رو
+                  <li>
+                    * الگوی ایمیل باید مطابق مثال رو به رو
                     باشد:exmple@email/gmail.com
                   </li>
                   <li>*شماره همراه باید 11 رقم باشد</li>
@@ -318,6 +326,34 @@ export default function Users() {
             )}
           </div>
         </EditModal>
+      )}
+      {isShowDetailsModal && (
+        <DetailsModal
+          onHide={() => setIsShowDetailsModal(false)}
+        >
+          <table>
+            <thead>
+              <tr>
+                <th>شهر</th>
+                <th>آدرس</th>
+                <th>امتیاز</th>
+                <th>میزان خرید</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{mainUserInfos.city}</td>
+                <td>{mainUserInfos.address}</td>
+                <td>{mainUserInfos.score}</td>
+                <td>
+                  {new Intl.NumberFormat("en-US", { style: "decimal" }).format(
+                    mainUserInfos.buy
+                  )}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </DetailsModal>
       )}
     </div>
   )

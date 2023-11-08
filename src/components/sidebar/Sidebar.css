@@ -6,16 +6,16 @@
     position: fixed;
 }
 
-.sidebar-links li{
+.sidebar-links a{
     padding: 15px 20px;
     transition: all 0.4s ease;
 }
 
-.sidebar-links li.active{
+.sidebar-links a.active{
     background: rgb(100, 51, 137);
 }
 
-.sidebar-links li a{
+.sidebar-links a{
   text-decoration: none;
   font-size: 19px;
   color: var(--white);
@@ -23,6 +23,6 @@
   align-items: center;
 }
 
-.sidebar-links li a svg{
+.sidebar-links  a svg{
     margin-left: 10px;
 }
