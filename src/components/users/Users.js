@@ -13,11 +13,16 @@ import { AiOutlineLock, AiOutlinePhone, AiOutlineUser } from "react-icons/ai"
 import { CiLocationOn } from "react-icons/ci"
 import { GrScorecard } from "react-icons/gr"
 import DetailsModal from "../detailsModal/DetailsModal"
+import UseGetFetch from "../../Hooks/UseGetFetch"
+import useDeleteFetch from "../../Hooks/useDeleteFetch"
+import useEditFetch from "../../Hooks/useEditFetch"
 export default function Users() {
-  const [users, setUsers] = useState([])
-  const [isShowDeleteModal, setIsShowDeleteModal] = useState("")
+  const [users, getAllUsers] = UseGetFetch("users")
   const [userId, setUserId] = useState("")
+  const [isShowDeleteModal, setIsShowDeleteModal] = useState("")
   const [isShowEditModal, setIsShowEditModal] = useState(false)
+  const [isShowErrorText, setIsShowErrorText] = useState(false)
+  const [isShowDetailsModal, setIsShowDetailsModal] = useState(false)
 
   const [name, setName] = useState("")
   const [lastname, setLastname] = useState("")
@@ -30,48 +35,39 @@ export default function Users() {
   const [score, setScore] = useState("")
   const [buy, setBuy] = useState("")
 
-  const [isShowErrorText, setIsShowErrorText] = useState(false)
-  const [isShowDetailsModal, setIsShowDetailsModal] = useState(false)
   const [mainUserInfos, setMainUserInfos] = useState([])
-  useEffect(() => {
-    getAllUsers()
-  }, [])
 
-  function getAllUsers() {
-    fetch("http://localhost:8000/api/users")
-      .then((res) => res.json())
-      .then((users) => {
-        setUsers(users)
-      })
-  }
+  let emailVal = /.+@.+.com/
 
-  function deleteUser() {
-    fetch(`http://localhost:8000/api/users/${userId}`, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result)
-        getAllUsers()
-        setIsShowDeleteModal(false)
-        toast.success(" حذف کاربر با موفقیت انجام شد ", {
-          position: toast.POSITION.TOP_RIGHT,
-        })
-      })
-      .catch((err) => {
-        if (err == "SyntaxError: Unexpected end of JSON input") {
-          alert(
-            "این کاربر به دلیل داشتن کامنت ،حذف نمی شود.ابتدا کامنت این شخص را پاک کنید.(باگ بک اند)"
-          )
-          setIsShowDeleteModal(false)
-        }
-      })
-  }
+  //use custom hooks for delete fetch
+  const deleteUser = useDeleteFetch(
+    "users",
+    userId,
+    getAllUsers,
+    setIsShowDeleteModal,
+    "کاربر"
+  )
 
-  function editUser() {
-    let emailVal = /.+@.+.com/
-    if (
-      name.trim().length >= 3 &&
+  //use custom hooks for edit fetch
+  const editUser = useEditFetch(
+    "users",
+    userId,
+    {
+      firsname: name,
+      lastname: lastname,
+      username: username,
+      password: password,
+      phone: phone,
+      city: city,
+      email: email,
+      address: address,
+      score: score,
+      buy: buy,
+    },
+    setIsShowEditModal,
+    getAllUsers,
+    "کاربر",
+    name.trim().length >= 3 &&
       lastname.trim().length >= 3 &&
       username.length >= 3 &&
       password.length >= 8 &&
@@ -80,41 +76,12 @@ export default function Users() {
       emailVal.test(email) &&
       address.trim().length &&
       !isNaN(score) &&
-      !isNaN(score)
-    ) {
-      const newUserInfos = {
-        firsname: name,
-        lastname: lastname,
-        username: username,
-        password: password,
-        phone: phone,
-        city: city,
-        email: email,
-        address: address,
-        score: score,
-        buy: buy,
-      }
-
-      fetch(`http://localhost:8000/api/users/${userId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newUserInfos),
-      })
-        .then((res) => res.json())
-        .then((result) => {
-          getAllUsers()
-          toast.success("ویرایش کاربر با موفقیت انجام", {
-            position: toast.POSITION.TOP_RIGHT,
-          })
-          setIsShowEditModal(false)
-          setIsShowErrorText(false)
-        })
-    } else {
-      setIsShowErrorText(true)
-    }
-  }
+      !isNaN(score),
+    setIsShowErrorText
+  )
+  useEffect(() => {
+    getAllUsers()
+  }, [])
 
   return (
     <div className="users-div">
@@ -328,9 +295,7 @@ export default function Users() {
         </EditModal>
       )}
       {isShowDetailsModal && (
-        <DetailsModal
-          onHide={() => setIsShowDetailsModal(false)}
-        >
+        <DetailsModal onHide={() => setIsShowDetailsModal(false)}>
           <table>
             <thead>
               <tr>

@@ -3,62 +3,22 @@ import ErrorBox from "../errorBox/ErrorBox"
 import DeleteModal from "../deleteModal/DeleteModal"
 import { toast, ToastContainer } from "react-toastify"
 import './Offers.css'
+import UseGetFetch from "../../Hooks/UseGetFetch"
+import useDeleteFetch from "../../Hooks/useDeleteFetch"
+import useAccRejFetch from "../../Hooks/useAccRejFetch"
 export default function Offers() {
-  const [allOffs, setAllOffs] = useState([])
+  const [allOffs,getAllOffers] = UseGetFetch('offs')
   const [offId, setOffId] = useState("")
   const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
   const [isShowRejectModal,setIsShowRejectModal] = useState(false)
   const [isShowAcceptModal,setIsShowAcceptModal] = useState(false)
+  const deleteOff = useDeleteFetch('offs',offId,getAllOffers,setIsShowDeleteModal,'تخفیف')
+  const acceptOff = useAccRejFetch("PUT",'offs','active-off',offId,1,setIsShowAcceptModal,getAllOffers,'فعال کردن تخفیف')
+  const rejectOff = useAccRejFetch('PUT','offs','active-off',offId,0,setIsShowRejectModal,getAllOffers,'غیر فعال کردن تخفیف')
   useEffect(() => {
     getAllOffers()
   }, [])
-  function getAllOffers() {
-    fetch("http://localhost:8000/api/offs")
-      .then((res) => res.json())
-      .then((offs) => {
-        console.log(offs)
-        setAllOffs(offs)
-      })
-  }
-  function deleteOff(){
-    fetch(`http://localhost:8000/api/offs/${offId}`,{
-      method:'DELETE'
-    }).then(res=>res.json()).then(res=>{
-      console.log(res);
-      getAllOffers()
-      setIsShowDeleteModal(false)
-      toast.success("حذف با موفقیت انجام شد ", {
-        position: toast.POSITION.TOP_RIGHT,
-      })
-    })
-  }
 
-  function acceptOff(){
-    fetch(`http://localhost:8000/api/offs/active-off/${offId}/1`,{
-      method:"PUT",
-      
-    }).then(res=>res.json()).then(res=>{
-      console.log(res);
-      setIsShowAcceptModal(false)
-      getAllOffers()
-      toast.success("تخفیف فعال شد", {
-        position: toast.POSITION.TOP_RIGHT,
-      })
-    })
-  }
-  function rejectOff(){
-    fetch(`http://localhost:8000/api/offs/active-off/${offId}/0`,{
-      method:"PUT",
-      
-    }).then(res=>res.json()).then(res=>{
-      console.log(res);
-      setIsShowRejectModal(false)
-      getAllOffers()
-      toast.success('تخفیف غیرفعال شد', {
-        position: toast.POSITION.TOP_RIGHT,
-      })
-    })
-  }
   return (
     <div className="offers-div">
           <ToastContainer autoClose={2000} rtl />

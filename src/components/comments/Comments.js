@@ -5,96 +5,29 @@ import DetailsModal from "../detailsModal/DetailsModal"
 import DeleteModal from "../deleteModal/DeleteModal"
 import EditModal from "../editModal/EditModal"
 import { toast, ToastContainer } from "react-toastify"
-
+import UseGetFetch from "../../Hooks/UseGetFetch"
+import useDeleteFetch from "../../Hooks/useDeleteFetch"
+import useEditFetch from "../../Hooks/useEditFetch"
+import useAccRejFetch from "../../Hooks/useAccRejFetch"
 export default function Comments() {
-  const [allComments, setAllComments] = useState([])
-  const [isShowDetailsModal, setIsShowDetailsModal] = useState(false)
-  const [mainBodyComment, setMainBodyComment] = useState("")
-  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
+  const [allComments,getAllComments] = UseGetFetch('comments')
   const [commentId, setCommentId] = useState("")
+  const [isShowDetailsModal, setIsShowDetailsModal] = useState(false)
+  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
   const [isShowEditModal, setIsShowEditModal] = useState(false)
   const [isShowAcceptModal, setIsShowAcceptModal] = useState(false)
   const [isShowRejectModal, setIsShowRejectModal] = useState(false)
+  const [mainBodyComment, setMainBodyComment] = useState("")
+
+  //use custom hooks for fetchs
+  const submitDeleteModal = useDeleteFetch('comments',commentId,getAllComments,setIsShowDeleteModal,'کامنت')
+  const submitEditModal = useEditFetch('comments',commentId,mainBodyComment,setIsShowEditModal,getAllComments,'کامنت')
+  const acceptModal = useAccRejFetch('POST','comments','accept',commentId,'',setIsShowAcceptModal,getAllComments,'تایید کامنت')
+  const rejectModal = useAccRejFetch('POST','comments','reject',commentId,'',setIsShowRejectModal,getAllComments,'رد کامنت')
   useEffect(() => {
     getAllComments()
   }, [])
 
-  function getAllComments() {
-    fetch("http://localhost:8000/api/comments")
-      .then((res) => res.json())
-      .then((comments) => {
-        setAllComments(comments)
-      })
-  }
-
-  function submitDeleteModal() {
-    console.log("delte modal")
-    fetch(`http://localhost:8000/api/comments/${commentId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        getAllComments()
-        setIsShowDeleteModal(false)
-        toast.success("حذف با موفقیت انجام شد ", {
-          position: toast.POSITION.TOP_RIGHT,
-        })
-      })
-  }
-
-  function submitEditModal() {
-    fetch(`http://localhost:8000/api/comments/${commentId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        body: mainBodyComment,
-      }),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res)
-        setIsShowEditModal(false)
-        getAllComments()
-        toast.success("ویرایش کامنت با موفقیت انجام شد ", {
-          position: toast.POSITION.TOP_RIGHT,
-        })
-      })
-  }
-
-  function acceptModal() {
-    fetch(`http://localhost:8000/api/comments/accept/${commentId}`, {
-      method: "POST",
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res)
-        setIsShowAcceptModal(false)
-        getAllComments()
-        toast.success("تایید کامنت با موفقیت انجام شد ", {
-          position: toast.POSITION.TOP_RIGHT,
-        })
-      })
-  }
-
-  function rejectModal() {
-    fetch(`http://localhost:8000/api/comments/reject/${commentId}`, {
-      method: "POST",
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res)
-        setIsShowRejectModal(false)
-        getAllComments()
-        toast.success("رد کامنت با موفقیت انجام شد ", {
-          position: toast.POSITION.TOP_RIGHT,
-        })
-      })
-  }
   return (
     <div className="comments-div">
       <ToastContainer autoClose={2000} rtl />

@@ -3,73 +3,25 @@ import ErrorBox from "../errorBox/ErrorBox"
 import "./Orders.css"
 import DeleteModal from "../deleteModal/DeleteModal"
 import DetailsModal from "../detailsModal/DetailsModal"
-import EditModal from "../editModal/EditModal"
 import { toast, ToastContainer } from "react-toastify"
-
+import UseGetFetch from "../../Hooks/UseGetFetch"
+import useDeleteFetch from "../../Hooks/useDeleteFetch"
+import useAccRejFetch from "../../Hooks/useAccRejFetch"
 export default function Orders() {
-  const [allOrders, setAllOrders] = useState([])
+  const [allOrders,getAllOrders] = UseGetFetch('orders')
+  const [orderId, setOrderId] = useState("")
   const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
   const [isShowDetailsModal, setIsShowDetailsModal] = useState(false)
   const [isShowRecordModal, setIsShowRecordModal] = useState(false)
-
   const [isShowRejectModal,setIsShowRejectModal] = useState(false)
   const [mainOrderInfos, setMainOrderInfos] = useState([])
-  const [orderId, setOrderId] = useState("")
+  const deleteOrder = useDeleteFetch('orders',orderId,getAllOrders,setIsShowDeleteModal,'سفارش')
+  const recordOrder = useAccRejFetch('PUT','orders','active-order',orderId,1,setIsShowRecordModal,getAllOrders,'ثبت سفارش')
+  const rejectOrder = useAccRejFetch('PUT','orders','active-order',orderId,0,setIsShowRejectModal,getAllOrders,'رد سفارش')
   useEffect(() => {
     getAllOrders()
   }, [])
-  function getAllOrders() {
-    fetch("http://localhost:8000/api/orders")
-      .then((res) => res.json())
-      .then((orders) => {
-        setAllOrders(orders)
-      })
-  }
 
-  function deleteOrder() {
-    fetch(`http://localhost:8000/api/orders/${orderId}`, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res)
-        getAllOrders()
-        setIsShowDeleteModal(false)
-        toast.success("حذف با موفقیت انجام شد ", {
-          position: toast.POSITION.TOP_RIGHT,
-        })
-      })
-  }
-
-  function recordOrder() {
-    fetch(`http://localhost:8000/api/orders/active-order/${orderId}/1`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res)
-        setIsShowRecordModal(false)
-        getAllOrders()
-      })
-  }
-
-  function rejectOrder(){
-    fetch(`http://localhost:8000/api/orders/active-order/${orderId}/0`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res)
-        setIsShowRejectModal(false)
-        getAllOrders()
-      })
-  }
   return (
     <div className="orders-div">
       <ToastContainer autoClose={2000} rtl />

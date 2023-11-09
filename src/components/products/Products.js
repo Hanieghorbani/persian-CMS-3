@@ -1,18 +1,13 @@
-import React,{useEffect,useState} from "react"
+import React,{useEffect} from "react"
 import AddNewProd from "../addNewProd/AddNewProd"
 import ProdTable from "../prodTable/ProdTable"
+import UseGetFetch from "../../Hooks/UseGetFetch"
 export default function Products() {
-  const [allProducts, setAllProducts] = useState([])
-
+  const [allProducts,getAllProducts] = UseGetFetch('products')
   useEffect(() => {
     getAllProducts()
   }, [])
 
-  function getAllProducts() {
-    fetch("http://localhost:8000/api/products")
-      .then((res) => res.json())
-      .then((products) => setAllProducts(products))
-  }
   return (
     <div>
       <AddNewProd getAllProducts={getAllProducts}/>

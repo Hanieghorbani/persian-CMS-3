@@ -15,6 +15,7 @@ export default function AddNewProd({ getAllProducts }) {
   const [newProdImg, setNewProdImg] = useState("")
   const [newProdColors, setNewProdColors] = useState("")
 
+
   function submitNewProduct() {
     if (
       newProdTitle &&

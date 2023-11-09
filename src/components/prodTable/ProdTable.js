@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import "./ProdTable.css"
 import DeleteModal from "../deleteModal/DeleteModal"
 import DetailsModal from "../detailsModal/DetailsModal"
@@ -9,11 +9,14 @@ import { MdDriveFileRenameOutline } from "react-icons/md"
 import { BsBag, BsCartCheck, BsCurrencyDollar } from "react-icons/bs"
 import { AiOutlineHeart, AiOutlineFileUnknown } from "react-icons/ai"
 import { HiOutlineColorSwatch } from "react-icons/hi"
+import useDeleteFetch from "../../Hooks/useDeleteFetch"
+import useEditFetch from "../../Hooks/useEditFetch"
 export default function ProdTable({ getAllProducts, allProducts }) {
   const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
+  const [productId, setProductId] = useState(null)
   const [isShowDetailsModal, setIsShowDetailsModal] = useState(false)
   const [isShowEditModal, setIsShowEditModal] = useState(false)
-  const [productId, setProductId] = useState(null)
+  const [isShowErrorText, setIsShowErrorText] = useState(false)
   const [mainInfoProd, setMainInfoProd] = useState([])
 
   const [prodNewTitle, setProdNewTitle] = useState("")
@@ -24,37 +27,20 @@ export default function ProdTable({ getAllProducts, allProducts }) {
   const [prodNewImg, setProdNewImg] = useState("")
   const [prodNewColors, setProdNewColors] = useState("")
 
-  function cancelDeleteModal() {
-    setIsShowDeleteModal(false)
-  }
-  function submitDeleteModal() {
-    fetch(`http://localhost:8000/api/products/${productId}`, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        setIsShowDeleteModal(false)
-        toast.success("حذف با موفقیت انجام شد ", {
-          position: toast.POSITION.TOP_RIGHT,
-        })
-        getAllProducts()
-      })
-      .catch((err) => {
-        if (err == "SyntaxError: Unexpected end of JSON input") {
-         alert('این محصول به دلیل داشتن کامنت حذف نمی شود.ابتدا کامنت ان راپاک کنید.(باگ بک اند)')
-          setIsShowDeleteModal(false)
-        }
-      })
-  }
-  function hideDetailsModal() {
-    setIsShowDetailsModal(false)
-  }
-  function closeEditModal() {
-    setIsShowEditModal(false)
-  }
 
-  function submitEditModal() {
-    const newInfosProd = {
+  //use custom hooks for fetchs
+  const submitDeleteModal = useDeleteFetch(
+    "products",
+    productId,
+    getAllProducts,
+    setIsShowDeleteModal,
+    "محصول"
+  )
+
+  const submitEditModal = useEditFetch(
+    "products",
+    productId,
+    {
       title: prodNewTitle,
       price: prodNewPrice,
       count: prodNewCount,
@@ -62,20 +48,21 @@ export default function ProdTable({ getAllProducts, allProducts }) {
       popularity: prodNewPopularity,
       sale: prodNewSale,
       colors: prodNewColors,
-    }
-    fetch(`http://localhost:8000/api/products/${productId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newInfosProd),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        setIsShowEditModal(false)
-        getAllProducts()
-      })
-  }
+    },
+    setIsShowEditModal,
+    getAllProducts,
+    "محصول",
+    prodNewTitle.trim().length >= 3 &&
+      !isNaN(prodNewPrice) &&
+      prodNewImg.trim().length &&
+      prodNewPopularity <= 100 &&
+      !isNaN(prodNewCount) &&
+      !isNaN(prodNewPopularity) &&
+      !isNaN(prodNewSale) &&
+      !isNaN(prodNewColors),
+    setIsShowErrorText
+  )
+
   return (
     <>
       <ToastContainer autoClose={2000} rtl />
@@ -91,7 +78,7 @@ export default function ProdTable({ getAllProducts, allProducts }) {
           </thead>
 
           <tbody>
-            {allProducts.reverse().map((product) => (
+            {allProducts.map((product) => (
               <tr key={product.id}>
                 <td>
                   <img src={product.img} alt="oil" />
@@ -147,13 +134,13 @@ export default function ProdTable({ getAllProducts, allProducts }) {
 
       {isShowDeleteModal && (
         <DeleteModal
-          cancelModal={cancelDeleteModal}
+          cancelModal={() => setIsShowDeleteModal(false)}
           submitModal={submitDeleteModal}
           title={"آیا از حذف اطمینان دارید ؟"}
         />
       )}
       {isShowDetailsModal && (
-        <DetailsModal onHide={hideDetailsModal}>
+        <DetailsModal onHide={() => setIsShowDetailsModal(false)}>
           <table className="w-100">
             <thead>
               <tr>
@@ -177,7 +164,10 @@ export default function ProdTable({ getAllProducts, allProducts }) {
         </DetailsModal>
       )}
       {isShowEditModal && (
-        <EditModal onClose={closeEditModal} onSubmit={submitEditModal}>
+        <EditModal
+          onClose={() => setIsShowEditModal(false)}
+          onSubmit={submitEditModal}
+        >
           <div className="row edit-form-group gap-3 justify-content-center">
             <div className="col-lg-5">
               <div>
@@ -256,6 +246,16 @@ export default function ProdTable({ getAllProducts, allProducts }) {
                 />
               </div>
             </div>
+            {isShowErrorText && (
+              <div className="bg-white">
+                <ul className="text-danger">
+                  <li>*میزان محبوبیت را به عدد وارد کنید</li>
+                  <li>*تعداد رنگ بندی را به عدد وارد کنید</li>
+                  <li>*میزان فروش را به عدد وارد کنید</li>
+                  <li>*مبلغ را به عدد وارد کنید</li>
+                </ul>
+              </div>
+            )}
           </div>
         </EditModal>
       )}
