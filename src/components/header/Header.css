@@ -1,7 +1,7 @@
 .header{
     position: sticky;
     top: 0;
-    z-index: 20;
+    z-index: 2;
     background: var(--white-50);
 }
 .header img{

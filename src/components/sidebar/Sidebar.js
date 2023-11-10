@@ -3,7 +3,7 @@ import "./Sidebar.css"
 import { AiOutlineHome } from "react-icons/ai"
 import { MdProductionQuantityLimits } from "react-icons/md"
 import { BiCommentDetail, BiSolidOffer } from "react-icons/bi"
-import { FiUsers } from "react-icons/fi"
+import { FiUsers,FiUser } from "react-icons/fi"
 import { BsCart4 } from "react-icons/bs"
 import { Link,NavLink } from "react-router-dom"
 
@@ -36,6 +36,10 @@ export default function Sidebar() {
         <NavLink to="/offers">
             <BiSolidOffer />
             تخفیف ها
+        </NavLink>
+        <NavLink to="/panel">
+            <FiUser />
+            حساب کاربری
         </NavLink>
       </ul>
     </div>

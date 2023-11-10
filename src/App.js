@@ -1,18 +1,29 @@
-import './App.css';
-import Sidebar from './components/sidebar/Sidebar';
-import Header from './components/header/Header';
-import routes from './routes';
-import { useRoutes } from 'react-router-dom';
+import "./App.css"
+import Sidebar from "./components/sidebar/Sidebar"
+import Header from "./components/header/Header"
+import routes from "./routes"
+import { useRoutes } from "react-router-dom"
+import CmsContext from "./Context"
+import { useState } from "react"
 export default function App() {
   const router = useRoutes(routes)
-  return (
-    <div className="app d-flex justify-content-between w-100">
-    <Sidebar />
+  const [adminInfos,setAdminInfos] = useState('')
 
-    <div className="main">
-      <Header />
-      {router}
-    </div>
-    </div>
-  );
+  return (
+    <CmsContext.Provider value={
+      {
+        adminInfos,
+        setAdminInfos
+      }
+    }>
+      <div className="app d-flex justify-content-between w-100">
+        <Sidebar />
+
+        <div className="main">
+          <Header />
+          {router}
+        </div>
+      </div>
+    </CmsContext.Provider>
+  )
 }
