@@ -1,0 +1,18 @@
+.offers-div table tr th,
+.offers-div table tr td{
+    padding: 20px;
+    text-align: center;
+}
+
+.offers-div table th{
+    font-size: 1.3rem;
+}
+
+.offers-div button{
+    background: var(--blue);
+    color: var(--white);
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}

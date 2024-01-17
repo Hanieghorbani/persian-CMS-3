@@ -1,0 +1,18 @@
+.orders-div table tr th,
+.orders-div table tr td{
+    padding: 20px;
+    text-align: center;
+}
+
+.orders-div table th{
+    font-size: 1.3rem;
+}
+
+.orders-div button{
+    background: var(--blue);
+    color: var(--white);
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
